@@ -585,3 +585,39 @@ Relaxation result:
     # 6 bytes
 ----
 --
+
+
+==== Alternate Link Register Table Jump Relaxation
+
+  Target Relocation:: R_RISCV_CALL, R_RISCV_CALL_PLT, R_RISCV_JAL, 
+
+  Description:: This relaxation type can relax a function call using the alternate link register into a single jump table instruction with the index of the address in the table jump section. This is an extension of the "Table Jump Relaxation" for Xqccmt.
+
+  Condition::
+  - The linker output is not position-independent.
+  - The `rd` operand of the function call is `t0` (`x5`).
+
+  Extensions Required:: `Xqccmt`
+
+  Relaxation::
+  - Instruction sequence associated with `R_RISCV_CALL` or `R_RISCV_CALL_PLT`
+  can be rewritten to a table jump instruction.
+  - Instruction associated with `R_RISCV_JAL` can be rewritten to a table
+  jump instruction.
+
+  Example::
++
+--
+Relaxation candidate:
+[,asm]
+----
+    auipc t0, 0    # R_RISCV_CALL_PLT symbol, R_RISCV_RELAX
+    jalr t0, t0, 0
+----
+
+Relaxation result:
+[,asm]
+----
+    cm.jalt <index for symbol>
+----
+--

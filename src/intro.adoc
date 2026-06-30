@@ -26,6 +26,7 @@ Currently, this document includes ABI extensions that cover the following of Qua
 ** `Xqcisim` v0.2.0
 ** `Xqcisls` v0.2.0
 ** `Xqcisync` v0.3.0
+* `Xqccmt` v0.1.0 cite:[xqccmtspec]
 
 [NOTE]
 [%unbreakable]

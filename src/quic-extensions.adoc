@@ -85,6 +85,17 @@ These are given for specific sizes so the linker knows the size of the underlyin
 
 The symbol and addend in these relocations should be the same as the prior relocation they relate to. If there is a non-zero offset in the access instruction, it should not be included in the access relocation addend.
 
+[[sections]]
+=== Sections
+
+The Xqccmt extension re-uses the `.riscv.jvt` section defined in the RISC-V ELF psABI.
+
+=== Attributes
+
+The RISC-V ELF psABI defines a method for providing additional information about object files that a linker or runtime loader can use to ensure the ELF files are compatible. Attributes with a tag number above 32768 are reserved for non-standard extensions.
+
+This psABI Extension does not allocate any non-standard attribute tags.
+
 === Code Sequences
 
 In addition to the code sequences documented in the RISC-V ELF psABI, the following sequences may also be used by a compiler following this extension, when the corresponding `Xqci` extensions have been enabled.
@@ -190,8 +201,24 @@ Conditional branch immediate (B-type) instructions (in `Xqcibi`) use the standar
 ----
 --
 
-=== Attributes
 
-The RISC-V ELF psABI defines a method for providing additional information about object files that a linker or runtime loader can use to ensure the ELF files are compatible. Attributes with a tag number above 32768 are reserved for non-standard extensions.
+=== Xqccmt Loading and Handling
 
-This psABI Extension does not allocate any non-standard attribute tags.
+Xqccmt is a custom extension with a superset of the Zcmt functionality. It
+shares instruction encodings, but interprets table entries slightly differently.
+
+The Jump Table contents are emitted into a section called `+.riscv.jvt+`, as
+described in <<sections>>. The start of the table is denoted with the
+`+__jvt_base$+` symbol, which must be non-weak.
+
+The program is responsible for loading `+__jvt_base$+` into the `jvt` CSR before
+any jump table instructions are executed. This code should treat the
+`+__jvt_base$+` symbol reference as weak, as the symbol will not be defined if
+the linker does not create a jump table.
+
+Existing Zcmt jump tables are compatible with Xqccmt, but Xqccmt jump tables are
+not compatible with Zcmt. An executable can only contain one jump table -- so
+the choice of which kind of jump table the linker should produce must be
+explicit.
+
+

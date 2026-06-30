@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an appendix describing the assembly extensions to go with this ABI.
 
+- Added sections describing Xqccmt and relating it to Zcmt.
+
 ## [v0.3]
 
 - The "Extended to Compressed Address Relaxation" is now called "Extended to
