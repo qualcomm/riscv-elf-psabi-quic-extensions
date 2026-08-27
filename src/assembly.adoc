@@ -28,16 +28,16 @@ Used with RVI, Zca, and Zcb load and store instructions to emit a relaxation mar
 |===
 | Instructions | Extension | Relocation
 
-| `lb`, `lbu`, `lh`, `lhu`, `lw`, `sb`, `sh`, `sw`             | RVI  | `R_RISCV_QC_ACCESS_32`
-| `c.lw`, `c.sw`                                               | `Zca` | `R_RISCV_QC_ACCESS_16`
-| `c.lbu`, `c.lh`, `c.lhu`, `c.sb`, `c.sh`                     | `Zcb` | `R_RISCV_QC_ACCESS_16`
+| `lb`, `lbu`, `lh`, `lhu`, `lw`, `sb`, `sh`, `sw`             | RVI Base | `R_RISCV_QC_ACCESS_32`
+| `c.lw`, `c.sw`                                               | `Zca`    | `R_RISCV_QC_ACCESS_16`
+| `c.lbu`, `c.lh`, `c.lhu`, `c.sb`, `c.sh`                     | `Zcb`    | `R_RISCV_QC_ACCESS_16`
 |===
 
 === Pseudo-Instructions
 
 ==== Xqcilo: Load and Store Pseudos with Symbol
 
-There are Load and Store Pseudos which take a symbol operand, to go with the `Xqcilo` load and store instructions. These require `Xqcilo` and `Xqcili` to be enabled.
+There are Load and Store Pseudos which take a symbol operand, to go with the `Xqcilo` load and store instructions. These require both `Xqcilo` and `Xqcili` to be enabled.
 
 These pseudos expand to `qc.e.li` followed by a standard RVI access with a `%qc.access` specifier. The load or store instructions may be compressed, depending on the enabled architecture. These sequences are chosen to enable linker relaxation.
 
