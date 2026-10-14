@@ -31,11 +31,14 @@ font:
       bold_italic: mplus-1mn-medium.ttf
     # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
     # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
+    # Use the copy bundled with Asciidoctor PDF: unlike the copy in fonts/, it maps
+    # the line feed used for hard line breaks, so a taller fallback (Noto Sans) is
+    # never reached for it and hard-broken lines keep the body font's line height
     M+ 1p Fallback:
-      normal: mplus-1p-regular-fallback.ttf
-      bold: mplus-1p-regular-fallback.ttf
-      italic: mplus-1p-regular-fallback.ttf
-      bold_italic: mplus-1p-regular-fallback.ttf
+      normal: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+      bold: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+      italic: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
+      bold_italic: GEM_FONTS_DIR/mplus1p-regular-fallback.ttf
     JetBrainsMono:
       normal: JetBrainsMono-Regular.ttf
       italic: JetBrainsMono-Italic.ttf
@@ -47,10 +50,22 @@ font:
       italic: GEM_FONTS_DIR/notosans-italic-subset.ttf
       bold_italic: GEM_FONTS_DIR/notosans-bold_italic-subset.ttf
     Noto Emoji: GEM_FONTS_DIR/notoemoji-subset.ttf
+    # The copy of M+ 1p in fonts/ and the copy bundled with Asciidoctor PDF have
+    # disjoint coverage: the bundled one maps U+000A and a wider CJK range, the
+    # local one maps ~1240 codepoints the bundled one lacks, including IPA
+    # extensions and dingbats such as U+2718. Keep the bundled copy first so it
+    # continues to decide line feed and CJK, and consult the local copy last,
+    # only for codepoints no other font in the chain provides.
+    M+ 1p Fallback Extra:
+      normal: mplus-1p-regular-fallback.ttf
+      bold: mplus-1p-regular-fallback.ttf
+      italic: mplus-1p-regular-fallback.ttf
+      bold_italic: mplus-1p-regular-fallback.ttf
   fallbacks:
     - M+ 1p Fallback
     - Noto Sans
     - Noto Emoji
+    - M+ 1p Fallback Extra
   svg:
     fallback-font-family: M+ 1mn
 page:
@@ -259,11 +274,20 @@ list:
     font-family: JetBrainsMono
 ulist:
   marker:
+    # Markers must be glyphs JetBrainsMono itself maps, so they never fall
+    # through to the fallback chain. U+26AB, used previously, is absent from
+    # every font in that chain and rendered as a missing-glyph box.
     disc:
-      content: ⚫
+      font_size: $base_font_size * 0.66
+      line_height: 1.6
+      content: ●
     circle:
-      content: ⚫
+      font_size: $base_font_size * 0.66
+      line_height: 1.6
+      content: ●
     square:
+      font_size: $base_font_size * 0.55
+      line_height: 2.0
       content: ■
     font-family: JetBrainsMono
 # List of figures settings
