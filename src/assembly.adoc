@@ -35,6 +35,18 @@ Used with RVI, Zca, and Zcb load and store instructions to emit a relaxation mar
 
 === Pseudo-Instructions
 
+==== Xqcili: Load Address
+
+RISC-V has three different "load address" pseudos:
+
+- Load Address: `la rd, sym` which chooses `lga` or `lla` depending on `.option pic`/`.option nopic` (respectively).
+- Load Global Address: `lga rd, sym` which loads `sym` into `rd` via its GOT slot, using `auipc` and `lw/ld`.
+- Load Local Address: `lla rd, sym` which loads `sym` into `rd` directly, using `auipc` and `addi`.
+
+When Xqcili is available, and we are not in PIC mode, we can expand `lla rd, sym` into `qc.e.li rd, sym`, which will save 2 bytes, and is much easier to relax. This is valid because in non-PIC mode, `qc.e.li` can address all the addresses that the `auipc` sequence can in the relevant code models (Medium Low and Medium Any).
+
+We cannot do this in PIC mode because `qc.e.li` is not PC-relative.
+
 ==== Xqcilo: Load and Store Pseudos with Symbol
 
 There are Load and Store Pseudos which take a symbol operand, to go with the `Xqcilo` load and store instructions. These require both `Xqcilo` and `Xqcili` to be enabled.
