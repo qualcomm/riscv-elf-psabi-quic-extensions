@@ -134,14 +134,14 @@ relocations are not per-se new, any that were defined in the past have been
 removed, as they were a binutils linker implementation detail, and since then no
 relocations with register-specific constraints have been added.
 
-In order to align with the RVI Base behaviour, we have we have added
-pseudo-instructions with the `Xqcilo` load and store mnemonics that take a
-symbol expression. These emit materialization sequences using `qc.e.li` followed
-by the equivalent width loads and stores with a `qc.access` symbol modifier.
-(The load or store is still compressible, if the assembler otherwise meets the
-requirements for the 16-bit equivalent instruction). These sequences are then
-relaxable to either a `x0`- or `gp`-relative Xqcilo instruction, if the accessed
-address is within range of either register. For example:
+In order to align with the RVI Base behaviour, we have added pseudo-instructions
+with the `Xqcilo` load and store mnemonics that take a symbol expression. These
+emit materialization sequences using `qc.e.li` followed by the equivalent width
+loads and stores with a `qc.access` symbol modifier. (The load or store is still
+compressible, if the assembler otherwise meets the requirements for the 16-bit
+equivalent instruction). These sequences are then relaxable to either a `x0`- or
+`gp`-relative Xqcilo instruction, if the accessed address is within range of
+either register. For example:
 
 [,asm]
 ----
@@ -164,27 +164,4 @@ address is within range of either register. For example:
 
     # Linker May Relax to:
     qc.e.sw a1, <offset>(gp)
-----
-
-=== Assembly Guidelines
-
-The Assembler does not have a configuration option to alter its behaviour based
-on using the Medium Low or Medium Any code models (it does have an option to
-emit Medium Any Position-Independent Sequences). This means the `lla` and `la`
-instructions always emit a PC-relative sequence, using `AUIPC`, even in the
-Medium Low code model.
-
-When `Xqcili` is available, and the Medium Low code model is being used, we
-suggest using `qc.e.li` instead of `la` or `lla`. The syntax is almost
-identical, but it is much easier to relax `qc.e.li` instructions than
-PC-relative sequences.
-
-[,asm]
-----
-    # Avoid
-    la  a0, symbol+addend
-    lla a0, symbol+addend
-
-    # Prefer
-    qc.e.li a0, symbol+addend
 ----
